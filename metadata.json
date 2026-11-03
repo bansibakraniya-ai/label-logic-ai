@@ -1,0 +1,10 @@
+{
+  "name": "Label Logic AI",
+  "description": "Smart food packaging scanner, barcode lookup, ingredient intelligence, and Jain dietary suitability analysis.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
