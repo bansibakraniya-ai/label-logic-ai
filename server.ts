@@ -1,3 +1,5 @@
+import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
 import http from 'http';
 import express, { Request, Response } from 'express';
 import { createServer as createViteServer } from 'vite';
@@ -8,7 +10,7 @@ import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) ||3000;
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
@@ -1643,13 +1645,37 @@ function parseIngredientsLocally(text: string) {
 }
 
 // Start dev or production server
+
+ 
 async function startServer() {
   const server = http.createServer(app);
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('dist'));
+    const currentDir = path.dirname(fileURLToPath(import.meta.url));
+
+    const possibleDistPaths = [
+      path.resolve(currentDir, 'dist'),
+      path.resolve(currentDir, '../dist'),
+      path.resolve(process.cwd(), 'dist'),
+      path.resolve(process.cwd(), '../dist'),
+    ];
+
+    const distPath = possibleDistPaths.find((dir) =>
+      existsSync(path.join(dir, 'index.html'))
+    );
+
+    if (!distPath) {
+      console.error('Frontend build not found.');
+      console.error('Checked paths:', possibleDistPaths);
+      throw new Error('dist/index.html is missing. Check the Vite build output.');
+    }
+
+    console.log('Serving frontend from:', distPath);
+
+    app.use(express.static(distPath));
+
     app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.resolve('dist/index.html'));
+      res.sendFile(path.join(distPath, 'index.html'));
     });
   } else {
     const vite = await createViteServer({
@@ -1661,6 +1687,7 @@ async function startServer() {
       },
       appType: 'spa',
     });
+
     app.use(vite.middlewares);
   }
 
@@ -1669,6 +1696,7 @@ async function startServer() {
   });
 }
 
-startServer().catch(err => {
+startServer().catch((err) => {
   console.error('Failed to start server:', err);
+  process.exit(1);
 });
