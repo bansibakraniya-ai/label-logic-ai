@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { HomeView } from './views/HomeView';
-import { ScanBarcodeView } from './views/ScanBarcodeView';
-import { IngredientDecoderView } from './views/IngredientDecoderView';
-import { NutritionDashboardView } from './views/NutritionDashboardView';
-import { ScanHistoryView } from './views/ScanHistoryView';
-import { SettingsView } from './views/SettingsView';
-import { PackagePhotoOCRView } from './views/PackagePhotoOCRView';
-import { JainIngredientCheckView } from './views/JainIngredientCheckView';
+import { HomeView } from "./HomeView";
+import { ScanBarcodeView } from "./ScanBarcodeView";
+import { IngredientDecoderView } from "./IngredientDecoderView";
+import { NutritionDashboardView } from './NutritionDashboardView';
+import { ScanHistoryView } from './ScanHistoryView';
+import { SettingsView } from './SettingsView';
+import { PackagePhotoOCRView } from './PackagePhotoOCRView';
+import { JainIngredientCheckView } from './JainIngredientCheckView';
 import {
   Language,
   Product,
